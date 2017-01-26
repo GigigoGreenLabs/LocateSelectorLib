@@ -83,4 +83,26 @@ public class LocateUtil {
 
     return IsoCodeList;
   }
+
+  public static String getTextFromRow(LocateSelectorUIMode locateSelectorUIMode,
+      boolean showIsoCode, String country, String language, String isoCode) {
+    String textRow = "";
+
+    if (locateSelectorUIMode == LocateSelectorUIMode.COUNTRY) {
+      textRow = country.toUpperCase();
+    }
+    if (locateSelectorUIMode == LocateSelectorUIMode.LANGUAGE) {
+      textRow = language;
+    }
+    if (locateSelectorUIMode == LocateSelectorUIMode.LANGUAGE_COUNTRY) {
+      textRow = language + "-" + country.toUpperCase();
+    }
+    if (locateSelectorUIMode == LocateSelectorUIMode.COUNTRY_LANGUAGE) {
+      textRow = country.toUpperCase() + "-" + language;
+    }
+
+    if (showIsoCode) textRow = textRow + "    " + isoCode;
+
+    return textRow;
+  }
 }

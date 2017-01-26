@@ -7,9 +7,11 @@
     android:layout_height="81dp"
     android:background="#eee">
   <LinearLayout
+      android:layout_marginLeft="7dp"
+      android:layout_marginRight="7dp"
       android:layout_width="match_parent"
-      android:layout_height="2dp"
-      android:background="#0f92b3"
+      android:layout_height="1dp"
+      android:background="#DE0E28"
       />
 <LinearLayout
     android:layout_width="match_parent"
@@ -19,20 +21,35 @@
     >
   <ImageView
       android:id="@+id/imgFlag2"
-      android:layout_width="27dp"
+      android:layout_width="54dp"
       android:layout_height="wrap_content"
       android:layout_gravity="center_vertical"
       android:paddingStart="7dp"
+      android:layout_weight="0"
+      android:src="@drawable/ad"
       />
   <TextView
       android:id="@+id/txtLocate2"
-      android:layout_width="match_parent"
+      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center_vertical"
       android:padding="10dp"
       android:textStyle="normal"
-      android:textSize="16sp"
+      android:textSize="14sp"
+      android:text="Spanish-Spain es"
+      android:layout_weight="1"
       />
-</LinearLayout>
+  <CheckBox
+      android:id="@+id/checkLocate2"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:checked="false"
+      android:layout_gravity="center_vertical"
+      android:gravity="end"
+      android:button="@xml/custom_check_box"
+      android:layout_marginRight="27dp"
+      android:layout_weight="0"
+      />
 
+</LinearLayout>
 </RelativeLayout>

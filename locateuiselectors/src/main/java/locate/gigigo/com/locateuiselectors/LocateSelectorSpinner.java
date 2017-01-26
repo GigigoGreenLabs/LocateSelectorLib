@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -108,28 +109,48 @@ public class LocateSelectorSpinner extends Spinner {
         String country = LocateUtil.getCountryResourceFromIsoCode(isoCode, mBuilder.getmContext());
         String language =
             LocateUtil.getLanguageResourceFromIsoCode(isoCode, mBuilder.getmContext());
-        String textRow = "";
-        Drawable drawFlag = LocateUtil.getDrawable(isoCode, mContext);
+        String textRow = LocateUtil.getTextFromRow(mBuilder.getmLocateSelectorUIMode(),
+            mBuilder.getShowIsoCodeInRowText(), country, language, isoCode);
 
-        if (mBuilder.getmLocateSelectorUIMode() == LocateSelectorUIMode.COUNTRY) {
-          textRow = country + "    " + isoCode;
-        }
-        if (mBuilder.getmLocateSelectorUIMode() == LocateSelectorUIMode.LANGUAGE) {
-          textRow = language + "    " + isoCode;
-        }
-        if (mBuilder.getmLocateSelectorUIMode() == LocateSelectorUIMode.COUNTRY_LANGUAGE) {
-          textRow = language + "-" + country + "    " + isoCode;
-        }
         //endregion
 
-        TextView text1 = (TextView) row.findViewById(mBuilder.getmViewIdLocSelBuilder().getTextViewForText());
-        text1.setText(textRow);
-        if (mBuilder.getFontTypeFace() != null) {
-          Typeface tf = mBuilder.getFontTypeFace();
-          text1.setTypeface(tf);
+        TextView text1 =
+            (TextView) row.findViewById(mBuilder.getmViewIdLocSelBuilder().getTextViewForText());
+        ImageView imgFlag =
+            (ImageView) row.findViewById(mBuilder.getmViewIdLocSelBuilder().getImageViewForFlag());
+        CheckBox chk =
+            (CheckBox) row.findViewById(mBuilder.getmViewIdLocSelBuilder().getCheckViewForSelect());
+
+        if (text1 != null) {
+          if (mBuilder.getmViewIdLocSelBuilder().isShowTextViewForText()) {
+            text1.setVisibility(VISIBLE);
+            //set text
+            text1.setText(textRow);
+            if (mBuilder.getFontTypeFace() != null) {
+              Typeface tf = mBuilder.getFontTypeFace();
+              text1.setTypeface(tf);
+            }
+          } else {
+            text1.setVisibility(GONE);
+          }
         }
-        ImageView imgFlag = (ImageView) row.findViewById(mBuilder.getmViewIdLocSelBuilder().getImageViewForFlag());
-        imgFlag.setImageDrawable(drawFlag);
+
+        if (imgFlag != null) {
+          if (mBuilder.getmViewIdLocSelBuilder().isShowImageViewForFlag()) {
+            imgFlag.setVisibility(VISIBLE);
+            imgFlag.setImageDrawable(LocateUtil.getDrawable(isoCode, mContext));
+          } else {
+            imgFlag.setVisibility(GONE);
+          }
+        }
+
+        if (chk != null) {
+          if (mBuilder.getmViewIdLocSelBuilder().isShowCheckViewForSelect()) {
+            chk.setVisibility(VISIBLE);
+          } else {
+            chk.setVisibility(GONE);
+          }
+        }
       }
 
       return row;
@@ -146,7 +167,8 @@ public class LocateSelectorSpinner extends Spinner {
     public View getCustomView(int position, View convertView, ViewGroup parent) {
       LayoutInflater inflater = ((Activity) mBuilder.getmContext()).getLayoutInflater();
       View row = inflater.inflate(mBuilder.getmItem_Layout(), parent, false);
-      TextView text1 = (TextView) row.findViewById(mBuilder.getmViewIdLocSelBuilder().getTextViewForText());
+      TextView text1 =
+          (TextView) row.findViewById(mBuilder.getmViewIdLocSelBuilder().getTextViewForText());
       if (isfirstTime) {
         isfirstTime = false;
         text1.setText(mBuilder.getDefaultText());

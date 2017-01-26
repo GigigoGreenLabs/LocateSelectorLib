@@ -21,7 +21,18 @@ public class LocateSelectorBuilder {
   Typeface fontTypeFace;//list//combo
   String defaultText = "[Select One..]";//now only for combo
 
-  ViewIdLocSelBuilder mViewIdLocSelBuilder= new ViewIdLocSelBuilder();
+  ViewIdLocSelBuilder mViewIdLocSelBuilder = new ViewIdLocSelBuilder();
+  boolean showIsoCodeInRowText = true;
+
+
+  public boolean getShowIsoCodeInRowText() {
+    return showIsoCodeInRowText;
+  }
+
+  public LocateSelectorBuilder setShowIsoCodeInRowText(boolean showIsoCodeInRowText) {
+    this.showIsoCodeInRowText = showIsoCodeInRowText;
+    return this;
+  }
 
   public ViewIdLocSelBuilder getmViewIdLocSelBuilder() {
     return mViewIdLocSelBuilder;
@@ -95,5 +106,4 @@ public class LocateSelectorBuilder {
     this.mData = mData;
     return this;
   }
-
 }

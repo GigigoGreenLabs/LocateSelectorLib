@@ -10,6 +10,9 @@
         android:layout_height="wrap_content"
         android:paddingStart="7dp"
         android:layout_gravity="center_vertical"
+        android:layout_weight="0"
+
+
         />
     <TextView
          android:id="@+id/txtLocate"
@@ -18,8 +21,19 @@
         android:padding="10dp"
         android:textStyle="italic"
         android:layout_gravity="center_vertical"
-
+        android:layout_weight="1"
         />
+
+    <!--<CheckBox-->
+        <!--android:id="@+id/checkLocate"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:checked="false"-->
+        <!--android:layout_gravity="center_vertical"-->
+        <!--android:gravity="end"-->
+        <!--android:layout_weight="0"-->
+        <!--android:visibility="gone"-->
+        <!--/>-->
     <!--android:text="@string/prompt_combo"-->
 
 </LinearLayout>

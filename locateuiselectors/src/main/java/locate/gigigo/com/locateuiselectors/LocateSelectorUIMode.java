@@ -6,7 +6,8 @@ package locate.gigigo.com.locateuiselectors;
 public enum LocateSelectorUIMode {
   COUNTRY(1L), //by default
   LANGUAGE(2L),
-  COUNTRY_LANGUAGE(3L);
+  COUNTRY_LANGUAGE(3L),
+  LANGUAGE_COUNTRY(4L);
 
   LocateSelectorUIMode(long l) {
 

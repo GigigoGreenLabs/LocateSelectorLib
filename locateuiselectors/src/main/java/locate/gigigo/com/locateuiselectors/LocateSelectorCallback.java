@@ -5,4 +5,5 @@ package locate.gigigo.com.locateuiselectors;
  */
 public interface LocateSelectorCallback {
   void onClickItem(String Country, String Language, String IsoCode);
+  void onCheckItem(String Country, String Language, String IsoCode); //ras only for listview
 }
