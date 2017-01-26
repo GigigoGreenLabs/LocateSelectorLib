@@ -12,19 +12,37 @@ import locate.gigigo.com.locateuiselectors.LocateSelectorUIMode;
  * Created by nubor on 23/01/2017.
  */
 public class LocateSelectorBuilder {
-
-  Context mContext; //mandatory
-  LocateSelectorUIMode mLocateSelectorUIMode;//mandatory
-  int mItem_Layout = -1; //LocateSelectorUIModedetermine that for default
-  List<LocateModel> mData;
+  //region Variables
+  //todo maybe in future create sub Builders, and keep in this builder all shared data, and extend it
+  //in the future maybe use reclycler and change the layoutmanager(LocateSelectorRecyclerBuilder)
+  Context mContext; //list//combo//mandatory
+  LocateSelectorUIMode mLocateSelectorUIMode;//list//combo//mandatory
+  int mItem_Layout = -1;
+  //list//combo //each control Spiner||ListView if value.equals(-1) set item_layout by default
+  List<LocateModel> mData;//list//combo
   LocateSelectorCallback mCallback;
   Typeface fontTypeFace;//list//combo
-  String defaultText = "[Select One..]";//now only for combo
+  String defaultText = "[Select One..]";//combo
+  ViewIdLocSelBuilder mViewIdLocSelBuilder = new ViewIdLocSelBuilder();//list//combo
+  boolean showIsoCodeInRowText = true;//list//combo
+  //endregion
 
-  ViewIdLocSelBuilder mViewIdLocSelBuilder = new ViewIdLocSelBuilder();
-  boolean showIsoCodeInRowText = true;
+  //region CONSTRUCTOR Context/LocateSelectorUIMode
+  public LocateSelectorBuilder(Context mContext, LocateSelectorUIMode mLocateSelectorUIMode) {
+    this.mContext = mContext;
+    this.mLocateSelectorUIMode = mLocateSelectorUIMode;
+    //todo more default values
+  }
+  public Context getContext() {
+    return mContext;
+  }
 
+  public LocateSelectorUIMode getLocateSelectorUIMode() {
+    return mLocateSelectorUIMode;
+  }
+  //endregion
 
+  //region ShowIsoCodeInRowText
   public boolean getShowIsoCodeInRowText() {
     return showIsoCodeInRowText;
   }
@@ -33,16 +51,20 @@ public class LocateSelectorBuilder {
     this.showIsoCodeInRowText = showIsoCodeInRowText;
     return this;
   }
+  //endregion
 
-  public ViewIdLocSelBuilder getmViewIdLocSelBuilder() {
+  //region ViewIdLocSelBuilder
+  public ViewIdLocSelBuilder getViewIdLocSelBuilder() {
     return mViewIdLocSelBuilder;
   }
 
-  public LocateSelectorBuilder setmViewIdLocSelBuilder(ViewIdLocSelBuilder mViewIdLocSelBuilder) {
+  public LocateSelectorBuilder setViewIdLocSelBuilder(ViewIdLocSelBuilder mViewIdLocSelBuilder) {
     this.mViewIdLocSelBuilder = mViewIdLocSelBuilder;
     return this;
   }
+  //endregion
 
+  //region FontTypeFace
   public Typeface getFontTypeFace() {
     return fontTypeFace;
   }
@@ -51,7 +73,9 @@ public class LocateSelectorBuilder {
     this.fontTypeFace = fontTypeFace;
     return this;
   }
+  //endregion
 
+  //region DefaultText for Spinner
   public String getDefaultText() {
     return defaultText;
   }
@@ -60,50 +84,39 @@ public class LocateSelectorBuilder {
     this.defaultText = defaultText;
     return this;
   }
-  //fixme Object LayorManagerUtilizadoPOrLaListView;//lsit
+  //endregion
 
-  //Duda, crear otra builder xclusiva para List(layoutmanager) y otra para spinner
-
-  public LocateSelectorBuilder(Context mContext, LocateSelectorUIMode mLocateSelectorUIMode) {
-    this.mContext = mContext;
-    this.mLocateSelectorUIMode = mLocateSelectorUIMode;
-
-    //todo more default values
-
-  }
-
-  public LocateSelectorCallback getmCallback() {
+  //region Callback
+  public LocateSelectorCallback getCallback() {
     return mCallback;
   }
 
-  public LocateSelectorBuilder setmCallback(LocateSelectorCallback mCallback) {
+  public LocateSelectorBuilder setCallback(LocateSelectorCallback mCallback) {
     this.mCallback = mCallback;
     return this;
   }
+  //endregion
 
-  public Context getmContext() {
-    return mContext;
-  }
-
-  public LocateSelectorUIMode getmLocateSelectorUIMode() {
-    return mLocateSelectorUIMode;
-  }
-
-  public int getmItem_Layout() {
+  //region ItemLayout
+  public int getItemLayout() {
     return mItem_Layout;
   }
 
-  public List<LocateModel> getmData() {
-    return mData;
-  }
-
-  public LocateSelectorBuilder setmItem_Layout(int mItem_Layout) {
+  public LocateSelectorBuilder setItem_Layout(int mItem_Layout) {
     this.mItem_Layout = mItem_Layout;
     return this;
   }
+  //endregion
 
-  public LocateSelectorBuilder setmData(List<LocateModel> mData) {
+  //region Data
+  public List<LocateModel> getData() {
+    return mData;
+  }
+
+  public LocateSelectorBuilder setData(List<LocateModel> mData) {
     this.mData = mData;
     return this;
   }
+  //endregion
+
 }

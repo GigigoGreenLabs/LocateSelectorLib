@@ -6,6 +6,8 @@ import locate.gigigo.com.locateuiselectors.R;
  * Created by nubor on 24/01/2017.
  */
 public class ViewIdLocSelBuilder {
+
+  //region Variables && initialization
   int imageViewForFlag = R.id.imgFlag;
   int textViewForText = R.id.txtLocate;
   int checkViewForSelect = R.id.checkLocate;
@@ -14,7 +16,10 @@ public class ViewIdLocSelBuilder {
   boolean showTextViewForText = true;
   boolean showCheckViewForSelect = true;
 
-  public boolean isShowImageViewForFlag() {
+  //endregion
+
+  //region Show/hide views Image/text/checkbox
+  public boolean getShowImageViewForFlag() {
     return showImageViewForFlag;
   }
 
@@ -23,26 +28,27 @@ public class ViewIdLocSelBuilder {
     return this;
   }
 
-  public boolean isShowTextViewForText() {
+  public boolean getShowTextViewForText() {
     return showTextViewForText;
   }
 
   public ViewIdLocSelBuilder setShowTextViewForText(boolean showTextViewForText) {
     this.showTextViewForText = showTextViewForText;
     return this;
-
   }
 
-  public boolean isShowCheckViewForSelect() {
+  public boolean getShowCheckViewForSelect() {
     return showCheckViewForSelect;
   }
 
   public ViewIdLocSelBuilder setShowCheckViewForSelect(boolean showCheckViewForSelect) {
     this.showCheckViewForSelect = showCheckViewForSelect;
     return this;
-
   }
 
+  //endregion
+
+  //region Re-set Views Image/text/checkbox
   public int getCheckViewForSelect() {
     return checkViewForSelect;
   }
@@ -69,4 +75,6 @@ public class ViewIdLocSelBuilder {
     this.textViewForText = textViewForText;
     return this;
   }
+  //endregion
+
 }

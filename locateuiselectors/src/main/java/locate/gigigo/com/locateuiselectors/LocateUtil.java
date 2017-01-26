@@ -11,6 +11,7 @@ import locate.gigigo.com.locateuiselectors.model.LocateModel;
  */
 public class LocateUtil {
 
+  //region get drawable from resources from isocode
   public static Drawable getDrawable(String isoCode, Context context) {
     String conCode = "";
     try {
@@ -26,7 +27,9 @@ public class LocateUtil {
     }
     return null;
   }
+  //endregion
 
+  //region get literal country/language from resources
   public static String getString(String name, Context context) {
     System.out.println(name);
     try {
@@ -46,7 +49,9 @@ public class LocateUtil {
   public static String getLanguageResourceFromIsoCode(String isoCode, Context context) {
     return getString("lang_" + getLanguageCodeFromIsoCode(isoCode), context);
   }
+  //endregion
 
+  //region get country/language from IsoCode
   public static String getCountryCodeFromIsoCode(String isoCode) {
     String country_Code = isoCode;
     try {
@@ -75,6 +80,9 @@ public class LocateUtil {
     return language_Code;
   }
 
+  //endregion
+
+  //region Convert from list<LocateModel> to string[]
   public static String[] getLocateModelIntoStringArray(List<LocateModel> data) {
     String[] IsoCodeList = new String[data.size()];
     for (int i = 0; i < data.size(); i++) {
@@ -83,8 +91,10 @@ public class LocateUtil {
 
     return IsoCodeList;
   }
+  //endregion
 
-  public static String getTextFromRow(LocateSelectorUIMode locateSelectorUIMode,
+  //region Get country/language and complete text for the UIRow
+  @Deprecated public static String getTextFromRow(LocateSelectorUIMode locateSelectorUIMode,
       boolean showIsoCode, String country, String language, String isoCode) {
     String textRow = "";
 
@@ -105,4 +115,29 @@ public class LocateUtil {
 
     return textRow;
   }
+
+  public static String getTextFromRow(LocateSelectorUIMode locateSelectorUIMode,
+      boolean showIsoCode, String isoCode, Context context) {
+    String textRow = "";
+    String country = LocateUtil.getCountryResourceFromIsoCode(isoCode, context);
+    String language = LocateUtil.getLanguageResourceFromIsoCode(isoCode, context);
+
+    if (locateSelectorUIMode == LocateSelectorUIMode.COUNTRY) {
+      textRow = country.toUpperCase();
+    }
+    if (locateSelectorUIMode == LocateSelectorUIMode.LANGUAGE) {
+      textRow = language;
+    }
+    if (locateSelectorUIMode == LocateSelectorUIMode.LANGUAGE_COUNTRY) {
+      textRow = language + "-" + country.toUpperCase();
+    }
+    if (locateSelectorUIMode == LocateSelectorUIMode.COUNTRY_LANGUAGE) {
+      textRow = country.toUpperCase() + "-" + language;
+    }
+
+    if (showIsoCode) textRow = textRow + "    " + isoCode;
+
+    return textRow;
+  }
+  //endregion
 }

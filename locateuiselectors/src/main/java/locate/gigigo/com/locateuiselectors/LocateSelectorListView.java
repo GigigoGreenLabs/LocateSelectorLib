@@ -3,7 +3,6 @@ package locate.gigigo.com.locateuiselectors;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +13,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import locate.gigigo.com.locateuiselectors.builders.LocateSelectorBuilder;
 
@@ -22,6 +20,13 @@ import locate.gigigo.com.locateuiselectors.builders.LocateSelectorBuilder;
  * Created by nubor on 24/01/2017.
  */
 public class LocateSelectorListView extends ListView {
+  //todo nit method willbe in interface, that this and Spinner implements
+
+  LocateSelectorBuilder mBuilder;
+  CustomizedListViewAdapter mAdapter;
+  int mPositionItemClicked = -1;
+
+  //region constructors
   public LocateSelectorListView(Context context) {
     super(context);
   }
@@ -33,36 +38,33 @@ public class LocateSelectorListView extends ListView {
   public LocateSelectorListView(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
   }
-
-  LocateSelectorBuilder mBuilder;
-  CustomizedListViewAdapter mAdapter;
-  int mPositionItemClicked = -1;
+  //endregion
 
   public void init(LocateSelectorBuilder builder) {
-    if (builder.getmItem_Layout() == -1) builder.setmItem_Layout(R.layout.lang_item_list_view);
+    if (builder.getItemLayout() == -1) builder.setItem_Layout(R.layout.lang_item_list_view);
     this.mBuilder = builder;
     loadData();
-    //this is for propagate event click item
+    //this is for propagate event click item, but no work ^_^
     this.setAddStatesFromChildren(true);
   }
 
   private void loadData() {
     //region create String array
-    String[] IsoCodesList = LocateUtil.getLocateModelIntoStringArray(mBuilder.getmData());
+    String[] IsoCodesList = LocateUtil.getLocateModelIntoStringArray(mBuilder.getData());
     //endregion
 
     mAdapter =
-        new CustomizedListViewAdapter((Activity) mBuilder.getmContext(), mBuilder.getmItem_Layout(),
+        new CustomizedListViewAdapter((Activity) mBuilder.getContext(), mBuilder.getItemLayout(),
             IsoCodesList);
 
     this.setAdapter(mAdapter);
     this.setOnItemClickListener(new OnItemClickListener() {
       @Override public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        String isoCode = mBuilder.getmData().get(position).getIsoCode();
+        String isoCode = mBuilder.getData().get(position).getIsoCode();
         String country = LocateUtil.getCountryCodeFromIsoCode(isoCode);
         String language = LocateUtil.getLanguageCodeFromIsoCode(isoCode);
 
-        mBuilder.getmCallback().onClickItem(country, language, isoCode);
+        mBuilder.getCallback().onClickItem(country, language, isoCode);
       }
     });
   }
@@ -102,79 +104,11 @@ public class LocateSelectorListView extends ListView {
         if (convertView != null) {
           holder = (ViewHolder) convertView.getTag();
         } else {
-          holder = new ViewHolder(convertView = inflater.inflate(mBuilder.getmItem_Layout(), null));
+          holder = new ViewHolder(convertView = inflater.inflate(mBuilder.getItemLayout(), null));
         }
-
         //put the data in it
-        String isoCode = mData[position];
-        if (isoCode != null) {
-          //region get values for show
-          String country =
-              LocateUtil.getCountryResourceFromIsoCode(isoCode, mBuilder.getmContext());
-          String language =
-              LocateUtil.getLanguageResourceFromIsoCode(isoCode, mBuilder.getmContext());
-
-          String textRow = LocateUtil.getTextFromRow(mBuilder.getmLocateSelectorUIMode(),
-              mBuilder.getShowIsoCodeInRowText(), country, language, isoCode);
-          //endregion
-
-          if (holder.txtLocate != null) {
-            if (mBuilder.getmViewIdLocSelBuilder().isShowTextViewForText()) {
-              holder.txtLocate.setVisibility(VISIBLE);
-              holder.txtLocate.setText(textRow);
-              if (mBuilder.getFontTypeFace() != null) {
-                Typeface tf = mBuilder.getFontTypeFace();
-                holder.txtLocate.setTypeface(tf);
-              } else {
-                holder.txtLocate.setVisibility(GONE);
-              }
-            }
-          }
-
-          if (holder.imgLocate != null) {
-            if (mBuilder.getmViewIdLocSelBuilder().isShowImageViewForFlag()) {
-              holder.imgLocate.setVisibility(VISIBLE);
-              holder.imgLocate.setImageDrawable(LocateUtil.getDrawable(isoCode, mContext));
-            } else {
-              holder.imgLocate.setVisibility(GONE);
-            }
-          }
-
-          //singlechoice
-
-          if (holder.checkLocate != null) {
-            if (mBuilder.getmViewIdLocSelBuilder().isShowCheckViewForSelect()) {
-              holder.checkLocate.setVisibility(VISIBLE);
-              holder.checkLocate.setChecked(position == mPositionItemClicked);
-              holder.checkLocate.setClickable(false);
-              holder.checkLocate.setOnCheckedChangeListener(
-                  new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                      CustomizedListViewAdapter.this.notifyDataSetChanged();
-                    }
-                  });
-
-              holder.mView.setOnClickListener(new OnClickListener() {
-                @Override public void onClick(View v) {
-                  mPositionItemClicked = position;
-                  CustomizedListViewAdapter.this.notifyDataSetChanged();
-                  String isoCode = mData[position];
-                  if (isoCode != null) {
-                    String country =
-                        LocateUtil.getCountryResourceFromIsoCode(isoCode, mBuilder.getmContext());
-                    String language =
-                        LocateUtil.getLanguageResourceFromIsoCode(isoCode, mBuilder.getmContext());
-                    mBuilder.getmCallback().onCheckItem(country, language, isoCode);
-                  }
-                }
-              });
-            }
-            else
-            {
-              holder.checkLocate.setVisibility(GONE);
-            }
-          }
+        if (mData != null && mData[position] != null) {
+          putDataIntoUIRow(holder, position);
         }
       } catch (Exception e) {
         e.printStackTrace();
@@ -183,22 +117,87 @@ public class LocateSelectorListView extends ListView {
       return convertView;
     }
 
+    private void putDataIntoUIRow(ViewHolder holder, final int position) {
+      //region get isocode and text for row
+      String isoCode = mData[position];
+      String textRow = LocateUtil.getTextFromRow(mBuilder.getLocateSelectorUIMode(),
+          mBuilder.getShowIsoCodeInRowText(), isoCode, mBuilder.getContext());
+      //endregion
+
+      //region txt
+      if (holder.txtLocate != null) {
+        if (mBuilder.getViewIdLocSelBuilder().getShowTextViewForText()) {
+          holder.txtLocate.setVisibility(VISIBLE);
+          holder.txtLocate.setText(textRow);
+          if (mBuilder.getFontTypeFace() != null) {
+            Typeface tf = mBuilder.getFontTypeFace();
+            holder.txtLocate.setTypeface(tf);
+          } else {
+            holder.txtLocate.setVisibility(GONE);
+          }
+        }
+      }
+      //endregion
+      //region image
+      if (holder.imgLocate != null) {
+        if (mBuilder.getViewIdLocSelBuilder().getShowImageViewForFlag()) {
+          holder.imgLocate.setVisibility(VISIBLE);
+          holder.imgLocate.setImageDrawable(LocateUtil.getDrawable(isoCode, mContext));
+        } else {
+          holder.imgLocate.setVisibility(GONE);
+        }
+      }
+      //endregion
+      //region CheckBox
+      if (holder.checkLocate != null) {
+        if (mBuilder.getViewIdLocSelBuilder().getShowCheckViewForSelect()) {
+          holder.checkLocate.setVisibility(VISIBLE);
+          holder.checkLocate.setChecked(position == mPositionItemClicked);
+          holder.checkLocate.setClickable(false);
+          holder.checkLocate.setOnCheckedChangeListener(
+              new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                  CustomizedListViewAdapter.this.notifyDataSetChanged();
+                }
+              });
+
+          holder.mView.setOnClickListener(new OnClickListener() {
+            @Override public void onClick(View v) {
+              mPositionItemClicked = position;
+              CustomizedListViewAdapter.this.notifyDataSetChanged();
+              String isoCode = mData[position];
+              if (isoCode != null) {
+                String country =
+                    LocateUtil.getCountryResourceFromIsoCode(isoCode, mBuilder.getContext());
+                String language =
+                    LocateUtil.getLanguageResourceFromIsoCode(isoCode, mBuilder.getContext());
+                mBuilder.getCallback().onCheckItem(country, language, isoCode);
+              }
+            }
+          });
+        } else {
+          holder.checkLocate.setVisibility(GONE);
+        }
+      }
+      //endregion
+
+    }
+
     private class ViewHolder {
       private TextView txtLocate;
       private ImageView imgLocate;
       private CheckBox checkLocate;
       private View mView;
-      //
-      //private RelativeLayout lytContainer;
 
       public ViewHolder(View view) {
         txtLocate =
-            (TextView) view.findViewById(mBuilder.getmViewIdLocSelBuilder().getTextViewForText());
+            (TextView) view.findViewById(mBuilder.getViewIdLocSelBuilder().getTextViewForText());
         imgLocate =
-            (ImageView) view.findViewById(mBuilder.getmViewIdLocSelBuilder().getImageViewForFlag());
+            (ImageView) view.findViewById(mBuilder.getViewIdLocSelBuilder().getImageViewForFlag());
 
-        checkLocate = (CheckBox) view.findViewById(
-            mBuilder.getmViewIdLocSelBuilder().getCheckViewForSelect());
+        checkLocate =
+            (CheckBox) view.findViewById(mBuilder.getViewIdLocSelBuilder().getCheckViewForSelect());
         mView = view;
         view.setTag(this);
       }

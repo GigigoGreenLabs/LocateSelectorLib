@@ -3,7 +3,6 @@ package locate.gigigo.com.locateuiselectors;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,10 +19,14 @@ import locate.gigigo.com.locateuiselectors.builders.LocateSelectorBuilder;
  * Created by nubor on 23/01/2017.
  */
 public class LocateSelectorSpinner extends Spinner {
-  boolean mBFirstHit = true;
+
+  //region variables
+  boolean mBFirstHit = true; //mandatory for don't do a callback firsttime load combo
   LocateSelectorBuilder mBuilder;
   CustomizedSpinnerAdapter adapter;
+  //endregion
 
+  //region constructors
   public LocateSelectorSpinner(Context context) {
     super(context);
   }
@@ -39,45 +42,42 @@ public class LocateSelectorSpinner extends Spinner {
   public LocateSelectorSpinner(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
   }
+  //endregion
 
   public void init(LocateSelectorBuilder builder) {
-    if (builder.getmItem_Layout() == -1) builder.setmItem_Layout(R.layout.lang_item);
+    if (builder.getItemLayout() == -1) builder.setItem_Layout(R.layout.lang_item);
     this.mBuilder = builder;
     loadData();
   }
-
-  /**
-   * esto cambia el combo de traducciones
-   */
 
   private void loadData() {
 
     mBFirstHit = true;
 
     //region create String array
-    String[] IsoCodesList = LocateUtil.getLocateModelIntoStringArray(mBuilder.getmData());
+    String[] IsoCodesList = LocateUtil.getLocateModelIntoStringArray(mBuilder.getData());
     //endregion
     adapter =
-        new CustomizedSpinnerAdapter((Activity) mBuilder.getmContext(), mBuilder.getmItem_Layout(),
+        new CustomizedSpinnerAdapter((Activity) mBuilder.getContext(), mBuilder.getItemLayout(),
             IsoCodesList);
-    adapter.setDropDownViewResource(mBuilder.getmItem_Layout());
+    adapter.setDropDownViewResource(mBuilder.getItemLayout());
     this.setAdapter(adapter);
     this.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
       @Override
       public void onItemSelected(AdapterView<?> parent, View view, final int position, long id) {
         if (!mBFirstHit) {
-          String isoCode = mBuilder.getmData().get(position).getIsoCode();
+          String isoCode = mBuilder.getData().get(position).getIsoCode();
           String country = LocateUtil.getCountryCodeFromIsoCode(isoCode);
           String language = LocateUtil.getLanguageCodeFromIsoCode(isoCode);
-          mBuilder.getmCallback().onClickItem(country, language, isoCode);
-          //todo no se queda bien seleccionado el valor elegido, quizás por la imagen
+          mBuilder.getCallback().onClickItem(country, language, isoCode);
+          //todo selection trolling?? or what?
           LocateSelectorSpinner.this.setSelection(position);
         }
         if (mBFirstHit) mBFirstHit = false;
       }
 
       @Override public void onNothingSelected(AdapterView<?> parent) {
-        //todo ?
+        //so what?
       }
     });
   }
@@ -103,57 +103,55 @@ public class LocateSelectorSpinner extends Spinner {
         row = inflater.inflate(mItemTemplate, parent, false);
       }
       //put the data in it
-      String isoCode = mData[position];
-      if (isoCode != null) {
-        //region get values for show
-        String country = LocateUtil.getCountryResourceFromIsoCode(isoCode, mBuilder.getmContext());
-        String language =
-            LocateUtil.getLanguageResourceFromIsoCode(isoCode, mBuilder.getmContext());
-        String textRow = LocateUtil.getTextFromRow(mBuilder.getmLocateSelectorUIMode(),
-            mBuilder.getShowIsoCodeInRowText(), country, language, isoCode);
-
-        //endregion
-
+      if (mData != null && mData[position] != null) {
         TextView text1 =
-            (TextView) row.findViewById(mBuilder.getmViewIdLocSelBuilder().getTextViewForText());
+            (TextView) row.findViewById(mBuilder.getViewIdLocSelBuilder().getTextViewForText());
         ImageView imgFlag =
-            (ImageView) row.findViewById(mBuilder.getmViewIdLocSelBuilder().getImageViewForFlag());
+            (ImageView) row.findViewById(mBuilder.getViewIdLocSelBuilder().getImageViewForFlag());
         CheckBox chk =
-            (CheckBox) row.findViewById(mBuilder.getmViewIdLocSelBuilder().getCheckViewForSelect());
+            (CheckBox) row.findViewById(mBuilder.getViewIdLocSelBuilder().getCheckViewForSelect());
 
-        if (text1 != null) {
-          if (mBuilder.getmViewIdLocSelBuilder().isShowTextViewForText()) {
-            text1.setVisibility(VISIBLE);
-            //set text
-            text1.setText(textRow);
-            if (mBuilder.getFontTypeFace() != null) {
-              Typeface tf = mBuilder.getFontTypeFace();
-              text1.setTypeface(tf);
-            }
-          } else {
-            text1.setVisibility(GONE);
-          }
-        }
-
-        if (imgFlag != null) {
-          if (mBuilder.getmViewIdLocSelBuilder().isShowImageViewForFlag()) {
-            imgFlag.setVisibility(VISIBLE);
-            imgFlag.setImageDrawable(LocateUtil.getDrawable(isoCode, mContext));
-          } else {
-            imgFlag.setVisibility(GONE);
-          }
-        }
-
-        if (chk != null) {
-          if (mBuilder.getmViewIdLocSelBuilder().isShowCheckViewForSelect()) {
-            chk.setVisibility(VISIBLE);
-          } else {
-            chk.setVisibility(GONE);
-          }
-        }
+        putDataIntoUIRow(text1, imgFlag, chk, position);
       }
 
       return row;
+    }
+    //todo refactor LocateSeletorListView.putDataIntoUIRow, and change Viewholder by 3 views
+    private void putDataIntoUIRow(TextView text1, ImageView imgFlag, CheckBox chk, int position) {
+      String isoCode = mData[position];
+      String textRow = LocateUtil.getTextFromRow(  mBuilder.getLocateSelectorUIMode(),
+        mBuilder.getShowIsoCodeInRowText(),  isoCode, mBuilder.getContext());
+
+      if (text1 != null) {
+        if (mBuilder.getViewIdLocSelBuilder().getShowTextViewForText()) {
+          text1.setVisibility(VISIBLE);
+          //set text
+          text1.setText(textRow);
+          if (mBuilder.getFontTypeFace() != null) {
+            Typeface tf = mBuilder.getFontTypeFace();
+            text1.setTypeface(tf);
+          }
+        } else {
+          text1.setVisibility(GONE);
+        }
+      }
+
+      if (imgFlag != null) {
+        if (mBuilder.getViewIdLocSelBuilder().getShowImageViewForFlag()) {
+          imgFlag.setVisibility(VISIBLE);
+          imgFlag.setImageDrawable(LocateUtil.getDrawable(isoCode, mContext));
+        } else {
+          imgFlag.setVisibility(GONE);
+        }
+      }
+
+      if (chk != null) {
+        if (mBuilder.getViewIdLocSelBuilder().getShowCheckViewForSelect()) {
+          chk.setVisibility(VISIBLE);
+        } else {
+          chk.setVisibility(GONE);
+        }
+      }
     }
 
     @Override public View getView(int position, View convertView, ViewGroup parent) {
@@ -165,10 +163,10 @@ public class LocateSelectorSpinner extends Spinner {
 
     // This funtion called for each row ( Called data.size() times )
     public View getCustomView(int position, View convertView, ViewGroup parent) {
-      LayoutInflater inflater = ((Activity) mBuilder.getmContext()).getLayoutInflater();
-      View row = inflater.inflate(mBuilder.getmItem_Layout(), parent, false);
+      LayoutInflater inflater = ((Activity) mBuilder.getContext()).getLayoutInflater();
+      View row = inflater.inflate(mBuilder.getItemLayout(), parent, false);
       TextView text1 =
-          (TextView) row.findViewById(mBuilder.getmViewIdLocSelBuilder().getTextViewForText());
+          (TextView) row.findViewById(mBuilder.getViewIdLocSelBuilder().getTextViewForText());
       if (isfirstTime) {
         isfirstTime = false;
         text1.setText(mBuilder.getDefaultText());

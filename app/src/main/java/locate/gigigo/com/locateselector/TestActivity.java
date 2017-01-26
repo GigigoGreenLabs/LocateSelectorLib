@@ -19,146 +19,169 @@ import locate.gigigo.com.locateuiselectors.LocateSelectorListView;
 import locate.gigigo.com.locateuiselectors.LocateSelectorSpinner;
 import locate.gigigo.com.locateuiselectors.LocateSelectorUIMode;
 
-public class TestActivity extends AppCompatActivity implements LocateSelectorCallback {
+public class TestActivity extends AppCompatActivity {
+    LocateSelectorListView mLocateListViewMASTER ;
+    LocateSelectorListView mLocateListViewDETAIL   ;
+
+  //region LocateSelectorCallback
+  LocateSelectorCallback mShowMessageLocateSelectorCallback = new LocateSelectorCallback() {
+    @Override public void onClickItem(String Country, String Language, String IsoCode) {
+      showMessage(Country, Language, IsoCode);
+    }
+
+    @Override public void onCheckItem(String Country, String Language, String IsoCode) {
+      showMessage(Country, "Cheched:" + Language, IsoCode);
+    }
+  };
+
+  LocateSelectorCallback mFromMasterToDetailLocateSelectorCallback = new LocateSelectorCallback() {
+    @Override public void onClickItem(String Country, String Language, String IsoCode) {
+      mLocateListViewMASTER.setVisibility(View.GONE);
+      mLocateListViewDETAIL.setVisibility(View.VISIBLE);
+      LocateSelectorBuilder builderLanguages = getBuilderListViewDetail(IsoCode);
+      mLocateListViewDETAIL.init(builderLanguages);
+    }
+
+    @Override public void onCheckItem(String Country, String Language, String IsoCode) {
+      this.onClickItem(Country, Language, IsoCode);
+    }
+  };
+
+  LocateSelectorCallback mFromDetailToMasterLocateSelectorCallback = new LocateSelectorCallback() {
+    @Override public void onClickItem(String Country, String Language, String IsoCode) {
+      showMessage(Country, Language, IsoCode);
+      mLocateListViewMASTER.setVisibility(View.VISIBLE);
+      mLocateListViewDETAIL.setVisibility(View.GONE);
+    }
+
+    @Override public void onCheckItem(String Country, String Language, String IsoCode) {
+      showMessage(Country, Language, IsoCode);
+      mLocateListViewMASTER.setVisibility(View.VISIBLE);
+      mLocateListViewDETAIL.setVisibility(View.GONE);
+    }
+  };
+  //endregion
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.content_scrolling);
+    mLocateListViewMASTER = (LocateSelectorListView) findViewById(R.id.listview2);
+    mLocateListViewDETAIL = (LocateSelectorListView) findViewById(R.id.listview3);
     initLayout();
   }
 
   private void initLayout() {
-    final LinearLayout lytContainer = (LinearLayout) findViewById(R.id.container);
-
-    /****
-     *
-     * custom item template LIST VIEW
-     */
-
-    LocateSelectorBuilder builderMyOwnItemTemplate = new LocateSelectorBuilder(TestActivity.this,
-        LocateSelectorUIMode.COUNTRY_LANGUAGE).setmViewIdLocSelBuilder(
-        new ViewIdLocSelBuilder().setImageViewForFlag(R.id.imgFlag2)
-            .setTextViewForText(R.id.txtLocate2)
-            .setCheckViewForSelect(R.id.checkLocate2))
-        .setmData(generateLocateModelList())
-        .setShowIsoCodeInRowText(false)
-        .setFontTypeFace(
-            Typeface.createFromAsset(TestActivity.this.getAssets(), "fonts/Gotham-Book.ttf"))
-        .setmItem_Layout(R.layout.my_lang_item_list_view)
-        .setmCallback(new LocateSelectorCallback() {
-          @Override public void onClickItem(String Country, String Language, String IsoCode) {
-            showMessage(Country, Language, IsoCode);
-          }
-
-          @Override public void onCheckItem(String Country, String Language, String IsoCode) {
-            showMessage(Country, "Cheched:" + Language, IsoCode);
-          }
-        });
-    LocateSelectorListView locateListView0 = (LocateSelectorListView) findViewById(R.id.listview1);
-    locateListView0.init(builderMyOwnItemTemplate);
-
-    //*SPINNERS*/
+    //LISTVIEW custom item template
+    createListViewCustomItemTemplate();
+    //LISTVIEW with Master-Detail
+    createListViewMaster();
+    //SPINNERS
     addSpinnersFromCode();
-    /*
-    * LISTVIEW with SubListView
-    * */
-    final LocateSelectorListView locateListViewMASTER =
-        (LocateSelectorListView) findViewById(R.id.listview2);
-    final LocateSelectorListView locateListViewDETAIL =
-        (LocateSelectorListView) findViewById(R.id.listview3);
-
-    final LocateSelectorCallback selectorCallbackDETAIL = new LocateSelectorCallback() {
-      @Override public void onClickItem(String Country, String Language, String IsoCode) {
-        showMessage(Country, Language, IsoCode);
-        locateListViewMASTER.setVisibility(View.VISIBLE);
-        locateListViewDETAIL.setVisibility(View.GONE);
-      }
-
-      @Override public void onCheckItem(String Country, String Language, String IsoCode) {
-        showMessage(Country, Language, IsoCode);
-        locateListViewMASTER.setVisibility(View.VISIBLE);
-        locateListViewDETAIL.setVisibility(View.GONE);
-      }
-    };
-
-    final LocateSelectorCallback selectorCallbackMASTER = new LocateSelectorCallback() {
-      @Override public void onClickItem(String Country, String Language, String IsoCode) {
-        locateListViewMASTER.setVisibility(View.GONE);
-        locateListViewDETAIL.setVisibility(View.VISIBLE);
-        String CountryCode = LocateUtil.getCountryCodeFromIsoCode(IsoCode);
-        LocateSelectorBuilder builderLanguages = new LocateSelectorBuilder(TestActivity.this,
-            LocateSelectorUIMode.LANGUAGE).setmCallback(selectorCallbackDETAIL)
-            .setmData(generateLocateModelLanguagesList(CountryCode))
-            .setmViewIdLocSelBuilder(new ViewIdLocSelBuilder().setShowCheckViewForSelect(false))
-            .setFontTypeFace(
-                Typeface.createFromAsset(TestActivity.this.getAssets(), "fonts/Gotham-Book.ttf"))
-            .setDefaultText("LANGUAGE");
-
-        locateListViewDETAIL.init(builderLanguages);
-      }
-
-      @Override public void onCheckItem(String Country, String Language, String IsoCode) {
-        locateListViewMASTER.setVisibility(View.GONE);
-        locateListViewDETAIL.setVisibility(View.VISIBLE);
-        String CountryCode = LocateUtil.getCountryCodeFromIsoCode(IsoCode);
-        LocateSelectorBuilder builderLanguages = new LocateSelectorBuilder(TestActivity.this,
-            LocateSelectorUIMode.LANGUAGE).setmCallback(selectorCallbackDETAIL)
-            .setmViewIdLocSelBuilder(new ViewIdLocSelBuilder().setShowCheckViewForSelect(false))
-            .setmData(generateLocateModelLanguagesList(CountryCode))
-            .setFontTypeFace(
-                Typeface.createFromAsset(TestActivity.this.getAssets(), "fonts/Gotham-Book.ttf"))
-            .setDefaultText("LANGUAGE");
-
-        locateListViewDETAIL.init(builderLanguages);
-      }
-    };
-
-    LocateSelectorBuilder builderListView =
-        new LocateSelectorBuilder(this, LocateSelectorUIMode.COUNTRY)
-            .setmCallback(selectorCallbackMASTER)
-            .setmViewIdLocSelBuilder(new ViewIdLocSelBuilder().setShowCheckViewForSelect(false))
-            .setmData(generateLocateModelList())
-            .setFontTypeFace(Typeface.createFromAsset(this.getAssets(), "fonts/Gotham-Ultra.ttf"));
-
-    locateListViewMASTER.init(builderListView);
   }
 
+  //region LISTVIEW custom item template
+  private void createListViewMaster() {
+
+    Typeface typefaceGUltra = Typeface.createFromAsset(this.getAssets(), "fonts/Gotham-Ultra.ttf");
+    LocateSelectorBuilder builderMASTER =
+        new LocateSelectorBuilder(this, LocateSelectorUIMode.COUNTRY).setmCallback(
+            mFromMasterToDetailLocateSelectorCallback)
+            .setmViewIdLocSelBuilder(new ViewIdLocSelBuilder().setShowCheckViewForSelect(false))
+            .setmData(generateLocateModelList())
+            .setFontTypeFace(typefaceGUltra);
+
+    mLocateListViewMASTER.init(builderMASTER);
+
+    //the DETAIL BUILDER is set inside mFromMasterToDetailLocateSelectorCallback
+
+  }
+  //endregion
+
+  //region LISTVIEW with Master-Detail
+  private LocateSelectorBuilder getBuilderListViewDetail(String isoCode) {
+    Typeface typefaceGBook =
+        Typeface.createFromAsset(TestActivity.this.getAssets(), "fonts/Gotham-Book.ttf");
+
+    ViewIdLocSelBuilder withOutCheckBoxviewIdLocSelBuilder =
+        new ViewIdLocSelBuilder().setShowCheckViewForSelect(false);
+
+    String CountryCode = LocateUtil.getCountryCodeFromIsoCode(isoCode);
+    LocateSelectorBuilder builderDetail =
+        new LocateSelectorBuilder(TestActivity.this, LocateSelectorUIMode.LANGUAGE).setmCallback(
+            mFromDetailToMasterLocateSelectorCallback)
+            .setmData(generateLocateModelLanguagesList(CountryCode))
+            .setmViewIdLocSelBuilder(withOutCheckBoxviewIdLocSelBuilder)
+            .setFontTypeFace(typefaceGBook)
+            .setDefaultText("LANGUAGE");
+
+    return builderDetail;
+  }
+
+  private void createListViewCustomItemTemplate() {
+
+    Typeface typefaceGBook =
+        Typeface.createFromAsset(TestActivity.this.getAssets(), "fonts/Gotham-Book.ttf");
+
+    //re-set Views, beacuse we re set the item Layout
+    ViewIdLocSelBuilder viewIdLocSelBuilder =
+        new ViewIdLocSelBuilder().setImageViewForFlag(R.id.imgFlag2)
+            .setTextViewForText(R.id.txtLocate2)
+            .setCheckViewForSelect(R.id.checkLocate2);
+
+    LocateSelectorBuilder builderMyOwnItemTemplate = new LocateSelectorBuilder(TestActivity.this,
+        LocateSelectorUIMode.COUNTRY_LANGUAGE).setmViewIdLocSelBuilder(viewIdLocSelBuilder)
+        .setmData(generateLocateModelList())
+        .setShowIsoCodeInRowText(false)
+        .setFontTypeFace(typefaceGBook)
+        .setmItem_Layout(R.layout.my_lang_item_list_view)
+        .setmCallback(mShowMessageLocateSelectorCallback);
+
+    LocateSelectorListView locateListView0 = (LocateSelectorListView) findViewById(R.id.listview1);
+    locateListView0.init(builderMyOwnItemTemplate);
+  }
+
+  //endregion
+
+  //region SPINNERS
   private void addSpinnersFromCode() {
     final LinearLayout lytContainer = (LinearLayout) findViewById(R.id.container);
-    //lytContainer.removeAllViews();
+
     ViewGroup.LayoutParams layoutParams =
         new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT);
-    /***
-     *
-     *
-     * Spinners
-     *
-     *
-     */
+    //region Typefaces
+    Typeface typefaceGBook = Typeface.createFromAsset(this.getAssets(), "fonts/Gotham-Book.ttf");
+    Typeface typefaceGLight = Typeface.createFromAsset(this.getAssets(), "fonts/Gotham-Light.ttf");
+    Typeface typefaceGMedium =
+        Typeface.createFromAsset(this.getAssets(), "fonts/Gotham-Medium.ttf");
+    //endregion
+
     //region  COUNTRY_LANGUAGE
     LocateSelectorBuilder builder =
-        new LocateSelectorBuilder(this, LocateSelectorUIMode.COUNTRY_LANGUAGE).setmCallback(this)
+        new LocateSelectorBuilder(this, LocateSelectorUIMode.COUNTRY_LANGUAGE).setmCallback(
+            mShowMessageLocateSelectorCallback)
             .setmData(generateLocateModelList())
-            .setFontTypeFace(Typeface.createFromAsset(this.getAssets(), "fonts/Gotham-Book.ttf"))
+            .setFontTypeFace(typefaceGBook)
             .setDefaultText("COUNTRY_LANGUAGE");
     LocateSelectorSpinner mSpinner = new LocateSelectorSpinner(this);
 
     //endregion
     //region COUNTRY
     LocateSelectorBuilder builder2 =
-        new LocateSelectorBuilder(this, LocateSelectorUIMode.COUNTRY).setmCallback(this)
+        new LocateSelectorBuilder(this, LocateSelectorUIMode.COUNTRY).setmCallback(
+            mShowMessageLocateSelectorCallback)
             .setmData(generateLocateModelList())
-            .setFontTypeFace(Typeface.createFromAsset(this.getAssets(), "fonts/Gotham-Light.ttf"))
+            .setFontTypeFace(typefaceGLight)
             .setDefaultText("COUNTRY");
 
     LocateSelectorSpinner mSpinner2 = new LocateSelectorSpinner(this);
     //endregion
     //region LANGUAGE
     LocateSelectorBuilder builder3 =
-        new LocateSelectorBuilder(this, LocateSelectorUIMode.LANGUAGE).setmCallback(this)
+        new LocateSelectorBuilder(this, LocateSelectorUIMode.LANGUAGE).setmCallback(
+            mShowMessageLocateSelectorCallback)
             .setmData(generateLocateModelList())
-            .setFontTypeFace(Typeface.createFromAsset(this.getAssets(), "fonts/Gotham-Medium.ttf"))
+            .setFontTypeFace(typefaceGMedium)
             .setDefaultText("LANGUAGE");
     LocateSelectorSpinner mSpinner3 = new LocateSelectorSpinner(this);
 
@@ -172,7 +195,9 @@ public class TestActivity extends AppCompatActivity implements LocateSelectorCal
     mSpinner2.init(builder2);
     mSpinner3.init(builder3);
   }
+  //endregion
 
+  //region utils functions
   private List<LocateModel> generateLocateModelList() {
     List<LocateModel> locateModelList = new ArrayList<>();
     locateModelList.add(new LocateModel("es"));
@@ -186,28 +211,14 @@ public class TestActivity extends AppCompatActivity implements LocateSelectorCal
     return locateModelList;
   }
 
-  private List<LocateModel> generateLocateModelLanguagesList(String Country) {
-    //private List<LocateModel> generateLocateModelLanguagesList() {
+  private List<LocateModel> generateLocateModelLanguagesList(String CountryCode) {
     List<LocateModel> locateModelList = new ArrayList<>();
-    //+"-"+ Country
-    //    +"-"+ Country
-    //    +"-"+ Country
-    //    +"-"+ Country
-    //    +"-"+ Country
-    locateModelList.add(new LocateModel("en" + "-" + Country));
-    locateModelList.add(new LocateModel("de" + "-" + Country));
-    locateModelList.add(new LocateModel("it" + "-" + Country));
-    locateModelList.add(new LocateModel("es" + "-" + Country));
-    locateModelList.add(new LocateModel("fr" + "-" + Country));
+    locateModelList.add(new LocateModel("en" + "-" + CountryCode));
+    locateModelList.add(new LocateModel("de" + "-" + CountryCode));
+    locateModelList.add(new LocateModel("it" + "-" + CountryCode));
+    locateModelList.add(new LocateModel("es" + "-" + CountryCode));
+    locateModelList.add(new LocateModel("fr" + "-" + CountryCode));
     return locateModelList;
-  }
-
-  @Override public void onClickItem(String Country, String Language, String IsoCode) {
-    showMessage(Country, Language, IsoCode);
-  }
-
-  @Override public void onCheckItem(String Country, String Language, String IsoCode) {
-    showMessage(Country, "FROM CHECKED: " + Language, IsoCode);
   }
 
   void showMessage(String Country, String Language, String IsoCode) {
@@ -222,4 +233,5 @@ public class TestActivity extends AppCompatActivity implements LocateSelectorCal
         .create()
         .show();
   }
+  //endregion
 }

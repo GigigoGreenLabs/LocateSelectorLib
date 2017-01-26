@@ -5,6 +5,7 @@ package locate.gigigo.com.locateuiselectors.model;
  */
 public class LocateModel {
 
+  //todo if multichoice is necesary, will be over here ;)
   String IsoCode="";
   int flagDrawable=0;
 
@@ -27,8 +28,6 @@ public class LocateModel {
   public void setFlagDrawable(int flagDrawable) {
     this.flagDrawable = flagDrawable;
   }
-
-
 
 
 }
