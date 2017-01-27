@@ -84,10 +84,10 @@ public class TestActivity extends AppCompatActivity {
 
     Typeface typefaceGUltra = Typeface.createFromAsset(this.getAssets(), "fonts/Gotham-Ultra.ttf");
     LocateSelectorBuilder builderMASTER =
-        new LocateSelectorBuilder(this, LocateSelectorUIMode.COUNTRY).setmCallback(
+        new LocateSelectorBuilder(this, LocateSelectorUIMode.COUNTRY).setCallback(
             mFromMasterToDetailLocateSelectorCallback)
-            .setmViewIdLocSelBuilder(new ViewIdLocSelBuilder().setShowCheckViewForSelect(false))
-            .setmData(generateLocateModelList())
+            .setViewIdLocSelBuilder(new ViewIdLocSelBuilder().setShowCheckViewForSelect(false))
+            .setData(generateLocateModelList())
             .setFontTypeFace(typefaceGUltra);
 
     mLocateListViewMASTER.init(builderMASTER);
@@ -107,10 +107,10 @@ public class TestActivity extends AppCompatActivity {
 
     String CountryCode = LocateUtil.getCountryCodeFromIsoCode(isoCode);
     LocateSelectorBuilder builderDetail =
-        new LocateSelectorBuilder(TestActivity.this, LocateSelectorUIMode.LANGUAGE).setmCallback(
+        new LocateSelectorBuilder(TestActivity.this, LocateSelectorUIMode.LANGUAGE).setCallback(
             mFromDetailToMasterLocateSelectorCallback)
-            .setmData(generateLocateModelLanguagesList(CountryCode))
-            .setmViewIdLocSelBuilder(withOutCheckBoxviewIdLocSelBuilder)
+            .setData(generateLocateModelLanguagesList(CountryCode))
+            .setViewIdLocSelBuilder(withOutCheckBoxviewIdLocSelBuilder)
             .setFontTypeFace(typefaceGBook)
             .setDefaultText("LANGUAGE");
 
@@ -129,12 +129,12 @@ public class TestActivity extends AppCompatActivity {
             .setCheckViewForSelect(R.id.checkLocate2);
 
     LocateSelectorBuilder builderMyOwnItemTemplate = new LocateSelectorBuilder(TestActivity.this,
-        LocateSelectorUIMode.COUNTRY_LANGUAGE).setmViewIdLocSelBuilder(viewIdLocSelBuilder)
-        .setmData(generateLocateModelList())
+        LocateSelectorUIMode.COUNTRY_LANGUAGE).setViewIdLocSelBuilder(viewIdLocSelBuilder)
+        .setData(generateLocateModelList())
         .setShowIsoCodeInRowText(false)
         .setFontTypeFace(typefaceGBook)
-        .setmItem_Layout(R.layout.my_lang_item_list_view)
-        .setmCallback(mShowMessageLocateSelectorCallback);
+        .setItem_Layout(R.layout.my_lang_item_list_view)
+        .setCallback(mShowMessageLocateSelectorCallback);
 
     LocateSelectorListView locateListView0 = (LocateSelectorListView) findViewById(R.id.listview1);
     locateListView0.init(builderMyOwnItemTemplate);
@@ -158,9 +158,9 @@ public class TestActivity extends AppCompatActivity {
 
     //region  COUNTRY_LANGUAGE
     LocateSelectorBuilder builder =
-        new LocateSelectorBuilder(this, LocateSelectorUIMode.COUNTRY_LANGUAGE).setmCallback(
+        new LocateSelectorBuilder(this, LocateSelectorUIMode.COUNTRY_LANGUAGE).setCallback(
             mShowMessageLocateSelectorCallback)
-            .setmData(generateLocateModelList())
+            .setData(generateLocateModelList())
             .setFontTypeFace(typefaceGBook)
             .setDefaultText("COUNTRY_LANGUAGE");
     LocateSelectorSpinner mSpinner = new LocateSelectorSpinner(this);
@@ -168,9 +168,9 @@ public class TestActivity extends AppCompatActivity {
     //endregion
     //region COUNTRY
     LocateSelectorBuilder builder2 =
-        new LocateSelectorBuilder(this, LocateSelectorUIMode.COUNTRY).setmCallback(
+        new LocateSelectorBuilder(this, LocateSelectorUIMode.COUNTRY).setCallback(
             mShowMessageLocateSelectorCallback)
-            .setmData(generateLocateModelList())
+            .setData(generateLocateModelList())
             .setFontTypeFace(typefaceGLight)
             .setDefaultText("COUNTRY");
 
@@ -178,9 +178,9 @@ public class TestActivity extends AppCompatActivity {
     //endregion
     //region LANGUAGE
     LocateSelectorBuilder builder3 =
-        new LocateSelectorBuilder(this, LocateSelectorUIMode.LANGUAGE).setmCallback(
+        new LocateSelectorBuilder(this, LocateSelectorUIMode.LANGUAGE).setCallback(
             mShowMessageLocateSelectorCallback)
-            .setmData(generateLocateModelList())
+            .setData(generateLocateModelList())
             .setFontTypeFace(typefaceGMedium)
             .setDefaultText("LANGUAGE");
     LocateSelectorSpinner mSpinner3 = new LocateSelectorSpinner(this);
