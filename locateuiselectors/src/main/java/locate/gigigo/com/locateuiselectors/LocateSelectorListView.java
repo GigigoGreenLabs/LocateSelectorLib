@@ -121,7 +121,8 @@ public class LocateSelectorListView extends ListView {
       //region get isocode and text for row
       String isoCode = mData[position];
       String textRow = LocateUtil.getTextFromRow(mBuilder.getLocateSelectorUIMode(),
-          mBuilder.getShowIsoCodeInRowText(), isoCode, mBuilder.getContext());
+          mBuilder.getShowIsoCodeInRowText(), mBuilder.getContext(),
+          mBuilder.getData().get(position));
       //endregion
 
       //region txt
@@ -142,7 +143,12 @@ public class LocateSelectorListView extends ListView {
       if (holder.imgLocate != null) {
         if (mBuilder.getViewIdLocSelBuilder().getShowImageViewForFlag()) {
           holder.imgLocate.setVisibility(VISIBLE);
-          holder.imgLocate.setImageDrawable(LocateUtil.getDrawable(isoCode, mContext));
+
+          if (mBuilder.getData().get(position).getFlagDrawable() == null) {
+            holder.imgLocate.setImageDrawable(LocateUtil.getDrawable(isoCode, mContext));
+          } else {
+            holder.imgLocate.setImageDrawable(mBuilder.getData().get(position).getFlagDrawable());
+          }
         } else {
           holder.imgLocate.setVisibility(GONE);
         }
@@ -169,10 +175,11 @@ public class LocateSelectorListView extends ListView {
               String isoCode = mData[position];
               if (isoCode != null) {
                 String country =
-                    LocateUtil.getCountryResourceFromIsoCode(isoCode, mBuilder.getContext());
+                    LocateUtil.getCountryCodeFromIsoCode(isoCode);
                 String language =
-                    LocateUtil.getLanguageResourceFromIsoCode(isoCode, mBuilder.getContext());
-                mBuilder.getCallback().onCheckItem(country, language, isoCode);
+                    LocateUtil.getLanguageCodeFromIsoCode(isoCode);
+                mBuilder.getCallback().onCheckItem(country, language, isoCode,true);
+                mBuilder.getCallback().onClickItem(country, language, isoCode);
               }
             }
           });

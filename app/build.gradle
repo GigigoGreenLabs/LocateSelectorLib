@@ -26,4 +26,9 @@ dependencies {
   compile project(':locateuiselectors')
 
   //compile 'com.github.GigigoGreenLabs:LocateSelectorLib:1.0'
+
+  compile 'com.github.bumptech.glide:glide:3.7.0'
+  compile 'com.github.bumptech.glide:okhttp-integration:1.4.0'
+  //compile  'com.squareup.okhttp3:okhttp:3.4.1'
+
 }

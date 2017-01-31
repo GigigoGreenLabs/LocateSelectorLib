@@ -1,16 +1,44 @@
 package locate.gigigo.com.locateuiselectors.model;
 
+import android.graphics.drawable.Drawable;
+
 /**
  * Created by nubor on 23/01/2017.
  */
 public class LocateModel {
 
-  //todo if multichoice is necesary, will be over here ;)
-  String IsoCode="";
-  int flagDrawable=0;
+  //todo if multichoice is necesary, will be over here ;) boolean are selected)
+  String IsoCode = "";
+  Drawable flagDrawable = null;
+
+  String CountryName = "";
+  String LanguageName = "";
 
   public LocateModel(String isoCode) {
     IsoCode = isoCode;
+  }
+
+  public LocateModel(String isoCode,  String countryName, String languageName) {
+    IsoCode = isoCode;
+
+    CountryName = countryName;
+    LanguageName = languageName;
+  }
+
+  public String getCountryName() {
+    return CountryName;
+  }
+
+  public void setCountryName(String countryName) {
+    CountryName = countryName;
+  }
+
+  public String getLanguageName() {
+    return LanguageName;
+  }
+
+  public void setLanguageName(String languageName) {
+    LanguageName = languageName;
   }
 
   public String getIsoCode() {
@@ -21,13 +49,11 @@ public class LocateModel {
     IsoCode = isoCode;
   }
 
-  public int getFlagDrawable() {
+  public Drawable getFlagDrawable() {
     return flagDrawable;
   }
 
-  public void setFlagDrawable(int flagDrawable) {
+  public void setFlagDrawable(Drawable flagDrawable) {
     this.flagDrawable = flagDrawable;
   }
-
-
 }

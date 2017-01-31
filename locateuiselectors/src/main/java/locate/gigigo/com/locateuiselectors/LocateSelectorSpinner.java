@@ -119,8 +119,8 @@ public class LocateSelectorSpinner extends Spinner {
     //todo refactor LocateSeletorListView.putDataIntoUIRow, and change Viewholder by 3 views
     private void putDataIntoUIRow(TextView text1, ImageView imgFlag, CheckBox chk, int position) {
       String isoCode = mData[position];
-      String textRow = LocateUtil.getTextFromRow(  mBuilder.getLocateSelectorUIMode(),
-        mBuilder.getShowIsoCodeInRowText(),  isoCode, mBuilder.getContext());
+      String textRow = LocateUtil.getTextFromRow(mBuilder.getLocateSelectorUIMode(),
+        mBuilder.getShowIsoCodeInRowText(),   mBuilder.getContext(),mBuilder.getData().get(position));
 
       if (text1 != null) {
         if (mBuilder.getViewIdLocSelBuilder().getShowTextViewForText()) {

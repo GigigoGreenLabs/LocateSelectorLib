@@ -117,10 +117,10 @@ public class LocateUtil {
   }
 
   public static String getTextFromRow(LocateSelectorUIMode locateSelectorUIMode,
-      boolean showIsoCode, String isoCode, Context context) {
+      boolean showIsoCode, Context context, LocateModel model) {
     String textRow = "";
-    String country = LocateUtil.getCountryResourceFromIsoCode(isoCode, context);
-    String language = LocateUtil.getLanguageResourceFromIsoCode(isoCode, context);
+    String country = LocateUtil.getCountryResourceFromIsoCode(model.getIsoCode(), context);
+    String language = LocateUtil.getLanguageResourceFromIsoCode(model.getIsoCode(), context);
 
     if (locateSelectorUIMode == LocateSelectorUIMode.COUNTRY) {
       textRow = country.toUpperCase();
@@ -135,7 +135,19 @@ public class LocateUtil {
       textRow = country.toUpperCase() + "-" + language;
     }
 
-    if (showIsoCode) textRow = textRow + "    " + isoCode;
+    if (showIsoCode) textRow = textRow + "    " + model.getIsoCode();
+
+    if (locateSelectorUIMode == LocateSelectorUIMode.CUSTOM_MODEL_RULES) {
+      String countryAux = model.getCountryName();
+      String languageAux = model.getLanguageName();
+
+      if (countryAux != "") textRow = countryAux.toUpperCase();
+      if (textRow != "") {
+        if (languageAux != "") textRow = textRow + "-" + languageAux;
+      } else {
+        if (languageAux != "") textRow = languageAux;
+      }
+    }
 
     return textRow;
   }

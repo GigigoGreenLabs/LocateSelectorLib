@@ -27,6 +27,7 @@
       android:paddingStart="7dp"
       android:layout_weight="0"
       android:src="@drawable/ad"
+
       />
   <TextView
       android:id="@+id/txtLocate2"
