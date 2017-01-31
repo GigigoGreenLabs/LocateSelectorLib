@@ -139,7 +139,8 @@ public class LocateSelectorSpinner extends Spinner {
       if (imgFlag != null) {
         if (mBuilder.getViewIdLocSelBuilder().getShowImageViewForFlag()) {
           imgFlag.setVisibility(VISIBLE);
-          imgFlag.setImageDrawable(LocateUtil.getDrawable(isoCode, mContext));
+          mBuilder.getLocateImageSetFlag().setFlagIntoImageView(mBuilder.getData().get(position),mContext,imgFlag);
+         // imgFlag.setImageDrawable(LocateUtil.getDrawable(isoCode, mContext));
         } else {
           imgFlag.setVisibility(GONE);
         }

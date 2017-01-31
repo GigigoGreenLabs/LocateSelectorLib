@@ -8,45 +8,64 @@ import android.graphics.drawable.Drawable;
 public class LocateModel {
 
   //todo if multichoice is necesary, will be over here ;) boolean are selected)
-  String IsoCode = "";
+  String isoCode = "";
   Drawable flagDrawable = null;
+  String flagURL="";
+  //todo placeHOLDER?
 
-  String CountryName = "";
-  String LanguageName = "";
+  String countryName = "";
+  String languageName = "";
+  boolean checked = false;
 
   public LocateModel(String isoCode) {
-    IsoCode = isoCode;
+    this.isoCode = isoCode;
   }
 
-  public LocateModel(String isoCode,  String countryName, String languageName) {
-    IsoCode = isoCode;
+  public LocateModel(String isoCode, String countryName, String languageName) {
+    this.isoCode = isoCode;
 
-    CountryName = countryName;
-    LanguageName = languageName;
+    this.countryName = countryName;
+    this.languageName = languageName;
+  }
+
+  public String getFlagURL() {
+    return flagURL;
+  }
+
+  public void setFlagURL(String flagURL) {
+    this.flagURL = flagURL;
+  }
+
+  public boolean getChecked() {
+    return checked;
+  }
+
+  public void setChecked(boolean checked) {
+    this.checked = checked;
   }
 
   public String getCountryName() {
-    return CountryName;
+    return countryName;
   }
 
   public void setCountryName(String countryName) {
-    CountryName = countryName;
+    this.countryName = countryName;
   }
 
   public String getLanguageName() {
-    return LanguageName;
+    return languageName;
   }
 
   public void setLanguageName(String languageName) {
-    LanguageName = languageName;
+    this.languageName = languageName;
   }
 
   public String getIsoCode() {
-    return IsoCode;
+    return isoCode;
   }
 
   public void setIsoCode(String isoCode) {
-    IsoCode = isoCode;
+    this.isoCode = isoCode;
   }
 
   public Drawable getFlagDrawable() {

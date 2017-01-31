@@ -1,5 +1,6 @@
 package locate.gigigo.com.locateselector;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
@@ -19,6 +20,8 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import locate.gigigo.com.locateuiselectors.LocateImageSetFlag;
+import locate.gigigo.com.locateuiselectors.LocateImageSetFlagDrawableImpl;
 import locate.gigigo.com.locateuiselectors.LocateUtil;
 import locate.gigigo.com.locateuiselectors.builders.ViewIdLocSelBuilder;
 import locate.gigigo.com.locateuiselectors.model.LocateModel;
@@ -146,7 +149,9 @@ public class TestActivity extends AppCompatActivity {
         .setShowIsoCodeInRowText(false)
         .setFontTypeFace(typefaceGBook)
         .setItem_Layout(R.layout.my_lang_item_list_view)
-        .setCallback(mShowMessageLocateSelectorCallback);
+        .setLocateImageSetFlag(new LocateImageSetFlagUrlGlideImpl())
+        .setCallback(mShowMessageLocateSelectorCallback)
+        ;
 
     LocateSelectorListView locateListView0 = (LocateSelectorListView) findViewById(R.id.listview1);
     locateListView0.init(builderMyOwnItemTemplate);
@@ -210,7 +215,7 @@ public class TestActivity extends AppCompatActivity {
   //endregion
 
   //region utils functions
-  private Bitmap theBitmap = null;
+
   private List<LocateModel> mLocateModelList;
   private void  generateLocateModelList() {
     mLocateModelList = new ArrayList<>();
@@ -221,9 +226,17 @@ public class TestActivity extends AppCompatActivity {
     mLocateModelList.add(new LocateModel("de-ch","SUIZA","Alemán"));
     mLocateModelList.add(new LocateModel("es-mx","MEXICO","Español"));
     mLocateModelList.add(new LocateModel("be-nl","HOLANDA","Flamenco"));
+    mLocateModelList.get(1).setChecked(true);
 
+    //region with LocateImageSetFlagURLGlideImpl
+    for (int i = 0; i < mLocateModelList.size(); i++) {
+      mLocateModelList.get(i).setFlagURL("https://s3-eu-west-1.amazonaws.com/stream-public-dev/woah/flag-italy.png");
+    }
 
-    new AsyncTask<Void, Void, Void>() {
+    initLayout();
+    //endregion
+    //region with drawable impl, but obtain that drawables from url, not using localraw recources
+    /*new AsyncTask<Void, Void, Void>() {
       @Override
       protected Void doInBackground(Void... params) {
         Looper.prepare();
@@ -248,15 +261,13 @@ public class TestActivity extends AppCompatActivity {
           for (int i = 0; i < mLocateModelList.size(); i++) {
             mLocateModelList.get(i).setFlagDrawable(new BitmapDrawable(theBitmap));
           }
+
           Log.d("", "Image loaded");
           initLayout();
         };
       }
-    }.execute();
-
-
-
-
+    }.execute();*/
+//endregion
 
   }
 
@@ -283,7 +294,8 @@ public class TestActivity extends AppCompatActivity {
         .show();
   }
   //endregion
-
+  //region with drawable impl, but obtain that drawables from url, not using localraw recources
+  private Bitmap theBitmap = null; //asynctask
   private Drawable getDrawableFromUrlWithGlide(String url) {
 
     ImageView myImgView = new ImageView(this);
@@ -294,4 +306,5 @@ public class TestActivity extends AppCompatActivity {
 
     return myImgView.getDrawable();
   }
+  //endregion
 }

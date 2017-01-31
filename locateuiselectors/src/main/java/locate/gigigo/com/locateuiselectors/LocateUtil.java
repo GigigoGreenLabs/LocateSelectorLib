@@ -11,6 +11,7 @@ import locate.gigigo.com.locateuiselectors.model.LocateModel;
  */
 public class LocateUtil {
 
+
   //region get drawable from resources from isocode
   public static Drawable getDrawable(String isoCode, Context context) {
     String conCode = "";

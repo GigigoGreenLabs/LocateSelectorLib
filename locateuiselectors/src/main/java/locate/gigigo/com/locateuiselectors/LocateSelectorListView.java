@@ -57,6 +57,13 @@ public class LocateSelectorListView extends ListView {
         new CustomizedListViewAdapter((Activity) mBuilder.getContext(), mBuilder.getItemLayout(),
             IsoCodesList);
 
+    for (int i = 0; i <mBuilder.getData().size(); i++) {
+      if(mBuilder.getData().get(i).getChecked()){
+        mPositionItemClicked=i;
+        break;
+      }
+    }
+
     this.setAdapter(mAdapter);
     this.setOnItemClickListener(new OnItemClickListener() {
       @Override public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -143,12 +150,7 @@ public class LocateSelectorListView extends ListView {
       if (holder.imgLocate != null) {
         if (mBuilder.getViewIdLocSelBuilder().getShowImageViewForFlag()) {
           holder.imgLocate.setVisibility(VISIBLE);
-
-          if (mBuilder.getData().get(position).getFlagDrawable() == null) {
-            holder.imgLocate.setImageDrawable(LocateUtil.getDrawable(isoCode, mContext));
-          } else {
-            holder.imgLocate.setImageDrawable(mBuilder.getData().get(position).getFlagDrawable());
-          }
+          mBuilder.getLocateImageSetFlag().setFlagIntoImageView(mBuilder.getData().get(position),mContext,holder.imgLocate);
         } else {
           holder.imgLocate.setVisibility(GONE);
         }
@@ -158,7 +160,7 @@ public class LocateSelectorListView extends ListView {
       if (holder.checkLocate != null) {
         if (mBuilder.getViewIdLocSelBuilder().getShowCheckViewForSelect()) {
           holder.checkLocate.setVisibility(VISIBLE);
-          holder.checkLocate.setChecked(position == mPositionItemClicked);
+          holder.checkLocate.setChecked(position == mPositionItemClicked );
           holder.checkLocate.setClickable(false);
           holder.checkLocate.setOnCheckedChangeListener(
               new CompoundButton.OnCheckedChangeListener() {

@@ -3,7 +3,8 @@ package locate.gigigo.com.locateuiselectors.builders;
 import android.content.Context;
 import android.graphics.Typeface;
 import java.util.List;
-import locate.gigigo.com.locateuiselectors.R;
+import locate.gigigo.com.locateuiselectors.LocateImageSetFlag;
+import locate.gigigo.com.locateuiselectors.LocateImageSetFlagDrawableImpl;
 import locate.gigigo.com.locateuiselectors.model.LocateModel;
 import locate.gigigo.com.locateuiselectors.LocateSelectorCallback;
 import locate.gigigo.com.locateuiselectors.LocateSelectorUIMode;
@@ -12,6 +13,7 @@ import locate.gigigo.com.locateuiselectors.LocateSelectorUIMode;
  * Created by nubor on 23/01/2017.
  */
 public class LocateSelectorBuilder {
+  //todo
   //region Variables
   //todo maybe in future create sub Builders, and keep in this builder all shared data, and extend it
   //in the future maybe use reclycler and change the layoutmanager(LocateSelectorRecyclerBuilder)
@@ -25,6 +27,7 @@ public class LocateSelectorBuilder {
   String defaultText = "[Select One..]";//combo
   ViewIdLocSelBuilder mViewIdLocSelBuilder = new ViewIdLocSelBuilder();//list//combo
   boolean showIsoCodeInRowText = true;//list//combo
+  LocateImageSetFlag mLocateImageSetFlag = new LocateImageSetFlagDrawableImpl();
   //endregion
 
   //region CONSTRUCTOR Context/LocateSelectorUIMode
@@ -33,12 +36,25 @@ public class LocateSelectorBuilder {
     this.mLocateSelectorUIMode = mLocateSelectorUIMode;
     //todo more default values
   }
+
   public Context getContext() {
     return mContext;
   }
 
   public LocateSelectorUIMode getLocateSelectorUIMode() {
     return mLocateSelectorUIMode;
+  }
+
+  //endregion
+
+  //region LocateImageSetFlag
+  public LocateImageSetFlag getLocateImageSetFlag() {
+    return mLocateImageSetFlag;
+  }
+
+  public LocateSelectorBuilder setLocateImageSetFlag(LocateImageSetFlag locateImageSetFlag) {
+    this.mLocateImageSetFlag = locateImageSetFlag;
+    return this;
   }
   //endregion
 
@@ -118,5 +134,4 @@ public class LocateSelectorBuilder {
     return this;
   }
   //endregion
-
 }
