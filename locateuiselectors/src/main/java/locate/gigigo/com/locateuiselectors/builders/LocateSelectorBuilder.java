@@ -13,7 +13,7 @@ import locate.gigigo.com.locateuiselectors.LocateSelectorUIMode;
  * Created by nubor on 23/01/2017.
  */
 public class LocateSelectorBuilder {
-  //todo
+  //todo createBaseBuilder and one builder for spinner and another 4 listview
   //region Variables
   //todo maybe in future create sub Builders, and keep in this builder all shared data, and extend it
   //in the future maybe use reclycler and change the layoutmanager(LocateSelectorRecyclerBuilder)
@@ -135,3 +135,8 @@ public class LocateSelectorBuilder {
   }
   //endregion
 }
+
+
+
+
+

@@ -1,1 +1,1 @@
-include  ':locateuiselectors'//,':app'
+include  ':locateuiselectors',':app'

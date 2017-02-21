@@ -1,17 +1,13 @@
 package locate.gigigo.com.locateselector;
 
-import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
-import android.os.Looper;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -19,9 +15,6 @@ import android.widget.LinearLayout;
 import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import locate.gigigo.com.locateuiselectors.LocateImageSetFlag;
-import locate.gigigo.com.locateuiselectors.LocateImageSetFlagDrawableImpl;
 import locate.gigigo.com.locateuiselectors.LocateUtil;
 import locate.gigigo.com.locateuiselectors.builders.ViewIdLocSelBuilder;
 import locate.gigigo.com.locateuiselectors.model.LocateModel;
@@ -38,11 +31,12 @@ public class TestActivity extends AppCompatActivity {
   //region LocateSelectorCallback
   LocateSelectorCallback mShowMessageLocateSelectorCallback = new LocateSelectorCallback() {
     @Override public void onClickItem(String countryCode, String languageCode, String isoCode) {
-      showMessage(countryCode,languageCode, isoCode);
+      showMessage(countryCode, languageCode, isoCode);
     }
 
-    @Override public void onCheckItem(String countryCode, String languageCode, String isoCode,boolean checked) {
-      showMessage(countryCode+"-"+languageCode, "Cheched:" +checked  , isoCode);
+    @Override public void onCheckItem(String countryCode, String languageCode, String isoCode,
+        boolean checked) {
+      showMessage(countryCode + "-" + languageCode, "Cheched:" + checked, isoCode);
     }
   };
 
@@ -54,7 +48,8 @@ public class TestActivity extends AppCompatActivity {
       mLocateListViewDETAIL.init(builderLanguages);
     }
 
-    @Override public void onCheckItem(String Country, String Language, String IsoCode,boolean checked) {
+    @Override
+    public void onCheckItem(String Country, String Language, String IsoCode, boolean checked) {
       this.onClickItem(Country, Language, IsoCode);
     }
   };
@@ -66,7 +61,8 @@ public class TestActivity extends AppCompatActivity {
       mLocateListViewDETAIL.setVisibility(View.GONE);
     }
 
-    @Override public void onCheckItem(String Country, String Language, String IsoCode,boolean checked) {
+    @Override
+    public void onCheckItem(String Country, String Language, String IsoCode, boolean checked) {
       showMessage(Country, Language, IsoCode);
       mLocateListViewMASTER.setVisibility(View.VISIBLE);
       mLocateListViewDETAIL.setVisibility(View.GONE);
@@ -77,12 +73,20 @@ public class TestActivity extends AppCompatActivity {
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.content_scrolling);
+
+    // initLayout();
+
+    try {
+      Intent intent = new Intent(this, RecyclerActivity.class);
+      startActivity(intent);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+
     mLocateListViewMASTER = (LocateSelectorListView) findViewById(R.id.listview2);
     mLocateListViewDETAIL = (LocateSelectorListView) findViewById(R.id.listview3);
-   // initLayout();
     generateLocateModelList();
-
-
   }
 
   private void initLayout() {
@@ -150,8 +154,7 @@ public class TestActivity extends AppCompatActivity {
         .setFontTypeFace(typefaceGBook)
         .setItem_Layout(R.layout.my_lang_item_list_view)
         .setLocateImageSetFlag(new LocateImageSetFlagUrlGlideImpl())
-        .setCallback(mShowMessageLocateSelectorCallback)
-        ;
+        .setCallback(mShowMessageLocateSelectorCallback);
 
     LocateSelectorListView locateListView0 = (LocateSelectorListView) findViewById(R.id.listview1);
     locateListView0.init(builderMyOwnItemTemplate);
@@ -217,20 +220,22 @@ public class TestActivity extends AppCompatActivity {
   //region utils functions
 
   private List<LocateModel> mLocateModelList;
-  private void  generateLocateModelList() {
+
+  private void generateLocateModelList() {
     mLocateModelList = new ArrayList<>();
-    mLocateModelList.add(new LocateModel("es","ESPAÑA",""));
-    mLocateModelList.add(new LocateModel("fr","FRANCIA",""));
-    mLocateModelList.add(new LocateModel("de","ALEMANIA",""));
-    mLocateModelList.add(new LocateModel("it-ch","SUIZA","Italiano"));
-    mLocateModelList.add(new LocateModel("de-ch","SUIZA","Alemán"));
-    mLocateModelList.add(new LocateModel("es-mx","MEXICO","Español"));
-    mLocateModelList.add(new LocateModel("be-nl","HOLANDA","Flamenco"));
+    mLocateModelList.add(new LocateModel("es", "ESPAÑA", ""));
+    mLocateModelList.add(new LocateModel("fr", "FRANCIA", ""));
+    mLocateModelList.add(new LocateModel("de", "ALEMANIA", ""));
+    mLocateModelList.add(new LocateModel("it-ch", "SUIZA", "Italiano"));
+    mLocateModelList.add(new LocateModel("de-ch", "SUIZA", "Alemán"));
+    mLocateModelList.add(new LocateModel("es-mx", "MEXICO", "Español"));
+    mLocateModelList.add(new LocateModel("be-nl", "HOLANDA", "Flamenco"));
     mLocateModelList.get(1).setChecked(true);
 
     //region with LocateImageSetFlagURLGlideImpl
     for (int i = 0; i < mLocateModelList.size(); i++) {
-      mLocateModelList.get(i).setFlagURL("https://s3-eu-west-1.amazonaws.com/stream-public-dev/woah/flag-italy.png");
+      mLocateModelList.get(i)
+          .setFlagURL("https://s3-eu-west-1.amazonaws.com/stream-public-dev/woah/flag-italy.png");
     }
 
     initLayout();
@@ -242,7 +247,7 @@ public class TestActivity extends AppCompatActivity {
         Looper.prepare();
         try {
           theBitmap = Glide.
-              with(TestActivity.this).
+              with(RecyclerActivity.this).
               load("https://s3-eu-west-1.amazonaws.com/stream-public-dev/woah/flag-italy.png").
               asBitmap().
               into(84,56).
@@ -267,7 +272,7 @@ public class TestActivity extends AppCompatActivity {
         };
       }
     }.execute();*/
-//endregion
+    //endregion
 
   }
 
@@ -293,16 +298,17 @@ public class TestActivity extends AppCompatActivity {
         .create()
         .show();
   }
+
   //endregion
   //region with drawable impl, but obtain that drawables from url, not using localraw recources
   private Bitmap theBitmap = null; //asynctask
+
   private Drawable getDrawableFromUrlWithGlide(String url) {
 
     ImageView myImgView = new ImageView(this);
     Glide.with(this)
 
-        .load(url)
-        .into(myImgView);
+        .load(url).into(myImgView);
 
     return myImgView.getDrawable();
   }

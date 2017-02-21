@@ -16,11 +16,72 @@ android {
      // proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
   }
+  flavorDimensions "recycler"
+  productFlavors {
+    recycler23 { targetSdkVersion 23
+      dimension "recycler"
+    }
+    recycler24 {targetSdkVersion 24
+      dimension "recycler"
+    }
+    recycler25 {targetSdkVersion 25
+      dimension "recycler"
+    }
+    recyclerno{ dimension "recycler"    }
+  }
+  sourceSets {
+
+    recyclerno {
+      java.srcDirs = ['src/main/java', 'src/main/java/']
+      res.srcDirs = ['src/main/res']
+    }
+    recycler23 {
+      java.srcDirs = ['src/recycler/java', 'src/recycler/java/']
+      res.srcDirs = ['src/recycler/res']
+    }
+    recycler24 {
+      java.srcDirs = ['src/recycler/java', 'src/recycler/java/']
+      res.srcDirs = ['src/recycler/res']
+    }
+    recycler25 {
+      java.srcDirs = ['src/recycler/java', 'src/recycler/java/']
+      res.srcDirs = ['src/recycler/res']
+    }
+  }
+  // true to publish all flavour artifacts
+  publishNonDefault true
+  // default build flavour
+  defaultPublishConfig "recyclernoReleaseCompile"
+}
+configurations {
+  recycler23ReleaseCompile
+  recycler24ReleaseCompile
+  recycler25ReleaseCompile
+  recyclernoReleaseCompile
+
+  recycler23DebugCompile
+  recycler24DebugCompile
+  recycler25DebugCompile
+  recyclernoDebugCompile
 }
 
 dependencies {
   compile fileTree(dir: 'libs', include: ['*.jar'])
   testCompile 'junit:junit:4.12'
 
+  recycler23ReleaseCompile('com.android.support:recyclerview-v7:23.0.0')
+  recycler24ReleaseCompile('com.android.support:recyclerview-v7:24.0.0')
+  recycler25ReleaseCompile('com.android.support:recyclerview-v7:25.0.0')
 
+  recycler23ReleaseCompile 'com.github.Gigigo-Android-Devs:gigigo-baseRecyclerAdapter-library-android:1.4.5'
+  recycler24ReleaseCompile 'com.github.Gigigo-Android-Devs:gigigo-baseRecyclerAdapter-library-android:1.4.5'
+  recycler25ReleaseCompile 'com.github.Gigigo-Android-Devs:gigigo-baseRecyclerAdapter-library-android:1.4.5'
+
+  recycler23DebugCompile('com.android.support:recyclerview-v7:23.0.0')
+  recycler24DebugCompile('com.android.support:recyclerview-v7:24.0.0')
+  recycler25DebugCompile('com.android.support:recyclerview-v7:25.0.0')
+
+  recycler23DebugCompile 'com.github.Gigigo-Android-Devs:gigigo-baseRecyclerAdapter-library-android:1.4.5'
+  recycler24DebugCompile 'com.github.Gigigo-Android-Devs:gigigo-baseRecyclerAdapter-library-android:1.4.5'
+  recycler25DebugCompile 'com.github.Gigigo-Android-Devs:gigigo-baseRecyclerAdapter-library-android:1.4.5'
 }

@@ -17,18 +17,78 @@ android {
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
   }
+  flavorDimensions "recycler"
+  productFlavors {
+    recycler23 { targetSdkVersion 23
+      dimension "recycler"
+    }
+    recycler24 {targetSdkVersion 24
+      dimension "recycler"
+    }
+    recycler25 {targetSdkVersion 25
+      dimension "recycler"
+    }
+    recyclerno{ dimension "recycler"    }
+  }
+  sourceSets {
+    recyclerno {
+      java.srcDirs = ['src/main/java', 'src/main/java/']
+      res.srcDirs=['src/main/res']
+    }
+    recycler23 {
+      java.srcDirs = ['src/recycler/java', 'src/recycler/java/']
+      res.srcDirs = ['src/recycler/res']
+    }
+    recycler24 {
+      java.srcDirs = ['src/recycler/java', 'src/recycler/java/']
+      res.srcDirs = ['src/recycler/res']
+    }
+    recycler25 {
+      java.srcDirs = ['src/recycler/java', 'src/recycler/java/']
+      res.srcDirs = ['src/recycler/res']
+    }
+  }
+}
+configurations {
+  recycler23ReleaseCompile
+  recycler24ReleaseCompile
+  recycler25ReleaseCompile
+  recyclernoReleaseCompile
+
+  recycler23DebugCompile
+  recycler24DebugCompile
+  recycler25DebugCompile
+  recyclernoDebugCompile
 }
 
 dependencies {
   compile fileTree(dir: 'libs', include: ['*.jar'])
   testCompile 'junit:junit:4.12'
   compile 'com.android.support:appcompat-v7:25.0.0'
-   compile project(':locateuiselectors')
+  // compile project(':locateuiselectors')
 
-  //compile 'com.github.GigigoGreenLabs:LocateSelectorLib:1.2'
+//jitpacktest  //compile 'com.github.GigigoGreenLabs:LocateSelectorLib:1.2'
+
+//  recyclernoCompile 'com.github.bumptech.glide:glide:3.7.0'
+//  recyclernoCompile 'com.github.bumptech.glide:okhttp-integration:1.4.0'
 
   compile 'com.github.bumptech.glide:glide:3.7.0'
   compile 'com.github.bumptech.glide:okhttp-integration:1.4.0'
+
   //compile  'com.squareup.okhttp3:okhttp:3.4.1'
+
+  recycler23ReleaseCompile project(path: ':locateuiselectors', configuration: 'recycler23Release')
+  recycler24ReleaseCompile project(path: ':locateuiselectors', configuration: 'recycler24Release')
+  recycler25ReleaseCompile project(path: ':locateuiselectors', configuration: 'recycler25Release')
+  recyclernoReleaseCompile project(path: ':locateuiselectors', configuration: 'recyclernoRelease')
+
+  recycler23DebugCompile project(path: ':locateuiselectors', configuration: 'recycler23Debug')
+  recycler24DebugCompile project(path: ':locateuiselectors', configuration: 'recycler24Debug')
+  recycler25DebugCompile project(path: ':locateuiselectors', configuration: 'recycler25Debug')
+  recyclernoDebugCompile project(path: ':locateuiselectors', configuration: 'recyclernoDebug')
+
+  recycler23Compile 'com.github.Gigigo-Android-Devs.imageLoader:imageloader-glide:v1.1'
+  recycler24Compile 'com.github.Gigigo-Android-Devs.imageLoader:imageloader-glide:v1.1'
+  recycler25Compile 'com.github.Gigigo-Android-Devs.imageLoader:imageloader-glide:v1.1'
 
 }

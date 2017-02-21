@@ -1,0 +1,3 @@
+lo suyo es q las clases del bind se le añadan al customviewholder, q debe estar dentro de recyclerView y cambiar el codigo para q
+en funcion de lo q le bindeemos elija(por ello necesita tener la lista el no el adapter y cambiar el codigo para q devuelva lo
+q matchee en la lista
